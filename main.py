@@ -22,15 +22,13 @@ class Main:
         2024-05-05
         """
         chrome_path = 'C:\chrome-driver\chromedriver.exe'
+
         service = Service(executable_path=chrome_path)
         chrome_options = webdriver.ChromeOptions()
         chrome_port = 9222
         chrome_options.add_experimental_option('debuggerAddress', f'localhost:{chrome_port}')
-        print('to aq')
+
         driver = webdriver.Chrome(options=chrome_options, service=service)
-        print('passei')
-        # driver.get("https://web.whatsapp.com/")
-        # time.sleep(60)
 
         self.driver = driver
 
@@ -68,6 +66,9 @@ class Main:
 
         spotify_users= ['Marllon', 'Grazielle', 'Thayná', 'Beathriz', 'Mauro', 'Raiana']
 
+        """
+            On the left side is the person's name and on the right side is the name of their contact on your WhatsApp
+        """
         spotify_users_contact = {
             'Marllon': 'Marllon ❤️',
             'Grazielle': 'Grazi',
