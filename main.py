@@ -1,7 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+import time
 
 from datetime import datetime
 from typing import Literal
@@ -23,13 +27,15 @@ class Main:
         """
         chrome_path = 'C:\chrome-driver\chromedriver.exe'
 
-        service = Service(executable_path=chrome_path)
         chrome_options = webdriver.ChromeOptions()
-        chrome_port = 9222
-        chrome_options.add_experimental_option('debuggerAddress', f'localhost:{chrome_port}')
+        chrome_options.add_argument(r"user-data-dir=C:\Users\grazi\AppData\Local\Google\Chrome\User Data")
+
+        service = ChromeService(executable_path=chrome_path)
 
         driver = webdriver.Chrome(options=chrome_options, service=service)
 
+        driver.get("https://web.whatsapp.com/")
+        time.sleep(10)
         self.driver = driver
 
     def _close_selenium(self):
@@ -41,14 +47,15 @@ class Main:
         contact_name (str): The name of the contact on WhatsApp who will send the message
         message (str): Message that will be sent
         """
-        search_box = self.driver.find_element(by=By.XPATH, value="//div[@contenteditable='true'][@title='Search input textbox']")
+        search_box = self.driver.find_element(by=By.XPATH, value="//div[@contenteditable='true'][@aria-label='Search input textbox']")
         search_box.click()
         search_box.send_keys(contact_name + Keys.ENTER)
 
-        contact = self.driver.find_element(by=By.XPATH, value=f"//span[@title='{contact_name}']")
+        wait = WebDriverWait(self.driver, 10)
+        contact = wait.until(EC.element_to_be_clickable((By.XPATH, f"//span[@title='{contact_name}']")))
         contact.click()
 
-        message_box = self.driver.find_element(by=By.XPATH, value="//div[@contenteditable='true'][@title='Type a message']")
+        message_box =  wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@contenteditable='true'][@aria-label='Type a message']")))
 
         message_box.send_keys(message)
         message_box.send_keys(Keys.RETURN)
@@ -75,7 +82,7 @@ class Main:
             'Thayná': 'Thayná ❤️',
             'Beathriz': 'Enfermagem por Amor ❤️',
             'Mauro': 'Dindo Mauro ❤️',
-            'Raiana': 'Rai ♥️'
+            'Raiana': 'Rai ❤️'
         }
 
         current_month = datetime.now().month
@@ -86,11 +93,16 @@ class Main:
         """
         paying_user_index = current_month - 1 if current_month < 7 else (current_month - 7) % len(spotify_users)
         paying_user = spotify_users[paying_user_index]
+      
+        next_month = current_month + 1
+        next_month = 1 if next_month == 13 else next_month
 
-        next_paying_user_index = paying_user_index + 1
+        next_paying_user_index = next_month - 1 if next_month < 7 else (next_month - 7) % len(spotify_users)
         paying_user_next_month = spotify_users[next_paying_user_index]
 
         people_send_message = [SpotifyPerson(paying_user, 'paying_user'), SpotifyPerson(paying_user_next_month, 'next_paying_user')]
+
+        time.sleep(5)
 
         self._start_selenium()
 
