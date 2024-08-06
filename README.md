@@ -8,11 +8,7 @@ Pain point: People forgot what their payment month was, so I created a WhatsApp 
 
 Clone the project, create your venv, and install the packages from the requirements.txt file.
 
-You need to download the Google Chrome drive which must be compatible with the version you have installed on your computer and enter it in the path: ```C:\chrome-driver```
-
 ## Settings
 In lines 67 to 76 of the code of main.py file, configure the participating users.
-
-Then open Google Chorme by running the command: ```"C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222```, open WhatsApp web and authenticate, leave the tab open.
 
 Then run the script.
